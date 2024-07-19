@@ -64,6 +64,71 @@ print("One-Hot Encoded Data:\n", df_one_hot_encoded)
 print("Target Encoded Data:\n", df_target_encoded)
 ```
 
+### Target Encoder
+
+#### What is Target Encoding?
+Target encoding, also known as mean encoding, involves replacing each category of a categorical feature with the mean of the target variable for that category. This method can be particularly useful when dealing with high-cardinality categorical variables, where one-hot encoding would result in a large number of features.
+
+#### When to Use Target Encoding?
+- **High-Cardinality Features**: When a categorical variable has many unique values, target encoding can reduce the dimensionality of the data.
+- **Continuous or Binary Targets**: This method is suitable for both regression and binary classification tasks.
+- **Handling Ordinal Features**: Target encoding can be useful when there is a suspected ordinal relationship between categories and the target variable.
+
+#### Why Use Target Encoding?
+- **Reduces Dimensionality**: Helps in avoiding the curse of dimensionality associated with one-hot encoding for high-cardinality features.
+- **Leverages Target Information**: Encodes categories based on their relationship with the target variable, potentially improving model performance.
+- **Simplifies Data**: Results in a single numerical feature, making the data simpler and more interpretable.
+
+#### Example of Target Encoding
+```python
+import pandas as pd
+import category_encoders as ce
+
+# Sample data
+data = {'color': ['red', 'blue', 'green', 'blue', 'green', 'red'], 'target': [1, 0, 1, 0, 1, 1]}
+df = pd.DataFrame(data)
+
+# Target Encoding
+target_encoder = ce.TargetEncoder(cols=['color'])
+df['color_encoded'] = target_encoder.fit_transform(df['color'], df['target'])
+
+print(df)
+```
+
+### Binary Encoder
+
+#### What is Binary Encoding?
+Binary encoding is a method that converts categorical values into binary numbers. Each category is first converted to an ordinal value, and then that ordinal value is converted to binary. This encoding can be more memory-efficient and handle high cardinality better than one-hot encoding.
+
+#### When to Use Binary Encoding?
+- **High-Cardinality Features**: When you have a categorical variable with many unique values, binary encoding can reduce the number of dimensions compared to one-hot encoding.
+- **Efficiency**: When memory and computation efficiency is a concern, binary encoding can be more efficient than one-hot encoding.
+- **Feature Reduction**: When you want to reduce the number of columns created from categorical variables.
+
+#### Why Use Binary Encoding?
+- **Reduces Dimensionality**: Significantly reduces the number of columns compared to one-hot encoding, especially for high-cardinality features.
+- **Efficient**: More memory and computation efficient than one-hot encoding.
+- **Handles High Cardinality**: Can effectively handle features with many unique categories without creating a very sparse matrix.
+
+#### Example of Binary Encoding
+```python
+import pandas as pd
+import category_encoders as ce
+
+# Sample data
+data = {'color': ['red', 'blue', 'green', 'blue', 'green', 'red']}
+df = pd.DataFrame(data)
+
+# Binary Encoding
+binary_encoder = ce.BinaryEncoder(cols=['color'])
+df_binary_encoded = binary_encoder.fit_transform(df)
+
+print(df_binary_encoded)
+```
+
 ### Summary
 
-Category encoders play a crucial role in preparing categorical data for machine learning models. The choice of encoder depends on the nature of the categorical feature, the size of the dataset, and the specific requirements of the machine learning algorithm. Proper encoding can enhance model performance, reduce computational costs, and make the data more suitable for analysis.
+- **Target Encoding**: Replaces categories with the mean of the target variable. Useful for high-cardinality features and can improve model performance by incorporating target information into the feature.
+- **Binary Encoding**: Converts categories into binary numbers, reducing the dimensionality compared to one-hot encoding and handling high cardinality efficiently.
+
+Both encoding methods are valuable tools in the data scientist's toolkit, and the choice between them depends on the specific characteristics of the dataset and the requirements of the machine learning task.
